@@ -53,3 +53,4 @@ Running `make run` will build the kernel and a bootable ISO (equivalent to make 
 Running `make run-hdd` will build the kernel and a raw HDD image (equivalent to make all-hdd) and then run it using `qemu` (if installed).
 
 For x86_64, the `run-bios` and `run-hdd-bios` targets are equivalent to their non `-bios` counterparts except that they boot `qemu` using the default SeaBIOS firmware instead of OVMF.
+# MUSICOS-64
