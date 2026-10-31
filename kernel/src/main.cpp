@@ -49,6 +49,7 @@ void hcf();
 
 }
 
+
 // The following stubs are required by the Itanium C++ ABI (the one we use,
 // regardless of the "Itanium" nomenclature).
 // Like the memory functions in memory.cpp, these stubs can be moved to a different .cpp file,
@@ -92,6 +93,782 @@ std::uint32_t fb_channel(std::uint8_t value, std::uint8_t mask_size, std::uint8_
     std::uint64_t max = (std::uint64_t{1} << mask_size) - 1;
     return static_cast<std::uint32_t>((value * max / 255) << mask_shift);
 }
+uint8_t text_red = 255;
+uint8_t text_green = 255;
+uint8_t text_blue = 255;
+
+void draw_pixel(limine_framebuffer* fb,
+                uint64_t x, uint64_t y,
+                uint8_t red, uint8_t green, uint8_t blue) {
+    if (fb == nullptr || fb->address == nullptr) {
+        return;
+    }
+
+    if (x >= fb->width || y >= fb->height || fb->bpp != 32) {
+        return;
+    }
+
+    volatile uint32_t* pixels =
+        static_cast<volatile uint32_t*>(fb->address);
+
+    uint32_t color =
+        (static_cast<uint32_t>(red) << fb->red_mask_shift) |
+        (static_cast<uint32_t>(green) << fb->green_mask_shift) |
+        (static_cast<uint32_t>(blue) << fb->blue_mask_shift);
+
+    pixels[y * (fb->pitch / 4) + x] = color;
+} 
+
+const char *get_char_row(char symbol, int row){
+    switch (symbol){
+        case ' ': {static const char *g[]={"00000","00000","00000","00000","00000","00000","00000"}; return g[row]; }
+        case 'A': {static const char *g[]={"00100","01010","10001","11111","10001","10001","10001"}; return g[row]; }
+        case 'B': {static const char *g[]={"11110","10001","10001","11110","10001","10001","11110"}; return g[row]; }
+        case 'C': {static const char *g[]={"01111","10000","10000","10000","10000","10000","01111"}; return g[row]; }
+        case 'D': {
+    static const char *g[] = {
+        "11110", "10001", "10001", "10001",
+        "10001", "10001", "11110"
+    };
+    return g[row];
+}
+case 'E': {
+    static const char *g[] = {
+        "11111", "10000", "10000", "11110",
+        "10000", "10000", "11111"
+    };
+    return g[row];
+}
+case 'F': {
+    static const char *g[] = {
+        "11111", "10000", "10000", "11110",
+        "10000", "10000", "10000"
+    };
+    return g[row];
+}
+case 'G': {
+    static const char *g[] = {
+        "01111", "10000", "10000", "10111",
+        "10001", "10001", "01111"
+    };
+    return g[row];
+}
+case 'H': {
+    static const char *g[] = {
+        "10001", "10001", "10001", "11111",
+        "10001", "10001", "10001"
+    };
+    return g[row];
+}
+case 'I': {
+    static const char *g[] = {
+        "11111", "00100", "00100", "00100",
+        "00100", "00100", "11111"
+    };
+    return g[row];
+}
+case 'J': {
+    static const char *g[] = {
+        "00111", "00010", "00010", "00010",
+        "10010", "10010", "01100"
+    };
+    return g[row];
+}
+case 'K': {
+    static const char *g[] = {
+        "10001", "10010", "10100", "11000",
+        "10100", "10010", "10001"
+    };
+    return g[row];
+}
+case 'L': {
+    static const char *g[] = {
+        "10000", "10000", "10000", "10000",
+        "10000", "10000", "11111"
+    };
+    return g[row];
+}
+case 'M': {
+    static const char *g[] = {
+        "10001", "11011", "10101", "10101",
+        "10001", "10001", "10001"
+    };
+    return g[row];
+}
+case 'N': {
+    static const char *g[] = {
+        "10001", "11001", "10101", "10011",
+        "10001", "10001", "10001"
+    };
+    return g[row];
+}
+case 'O': {
+    static const char *g[] = {
+        "01110", "10001", "10001", "10001",
+        "10001", "10001", "01110"
+    };
+    return g[row];
+}
+case 'P': {
+    static const char *g[] = {
+        "11110", "10001", "10001", "11110",
+        "10000", "10000", "10000"
+    };
+    return g[row];
+}
+case 'Q': {
+    static const char *g[] = {
+        "01110", "10001", "10001", "10001",
+        "10101", "10010", "01101"
+    };
+    return g[row];
+}
+case 'R': {
+    static const char *g[] = {
+        "11110", "10001", "10001", "11110",
+        "10100", "10010", "10001"
+    };
+    return g[row];
+}
+case 'S': {
+    static const char *g[] = {
+        "01111", "10000", "10000", "01110",
+        "00001", "00001", "11110"
+    };
+    return g[row];
+}
+case 'T': {
+    static const char *g[] = {
+        "11111", "00100", "00100", "00100",
+        "00100", "00100", "00100"
+    };
+    return g[row];
+}
+case 'U': {
+    static const char *g[] = {
+        "10001", "10001", "10001", "10001",
+        "10001", "10001", "01110"
+    };
+    return g[row];
+}
+case 'V': {
+    static const char *g[] = {
+        "10001", "10001", "10001", "10001",
+        "10001", "01010", "00100"
+    };
+    return g[row];
+}
+case 'W': {
+    static const char *g[] = {
+        "10001", "10001", "10001", "10101",
+        "10101", "10101", "01010"
+    };
+    return g[row];
+}
+case 'X': {
+    static const char *g[] = {
+        "10001", "10001", "01010", "00100",
+        "01010", "10001", "10001"
+    };
+    return g[row];
+}
+case 'Y': {
+    static const char *g[] = {
+        "10001", "10001", "01010", "00100",
+        "00100", "00100", "00100"
+    };
+    return g[row];
+}
+case 'Z': {
+    static const char *g[] = {
+        "11111", "00001", "00010", "00100",
+        "01000", "10000", "11111"
+    };
+    return g[row];
+}
+case '0': {
+    static const char *g[] = {
+        "01110", "10001", "10011", "10101",
+        "11001", "10001", "01110"
+    };
+    return g[row];
+}
+case '1': {
+    static const char *g[] = {
+        "00100", "01100", "00100", "00100",
+        "00100", "00100", "01110"
+    };
+    return g[row];
+}
+case '2': {
+    static const char *g[] = {
+        "01110", "10001", "00001", "00010",
+        "00100", "01000", "11111"
+    };
+    return g[row];
+}
+case '3': {
+    static const char *g[] = {
+        "11110", "00001", "00001", "01110",
+        "00001", "00001", "11110"
+    };
+    return g[row];
+}
+case '4': {
+    static const char *g[] = {
+        "00010", "00110", "01010", "10010",
+        "11111", "00010", "00010"
+    };
+    return g[row];
+}
+case '5': {
+    static const char *g[] = {
+        "11111", "10000", "10000", "11110",
+        "00001", "00001", "11110"
+    };
+    return g[row];
+}
+case '6': {
+    static const char *g[] = {
+        "01110", "10000", "10000", "11110",
+        "10001", "10001", "01110"
+    };
+    return g[row];
+}
+case '7': {
+    static const char *g[] = {
+        "11111", "00001", "00010", "00100",
+        "01000", "01000", "01000"
+    };
+    return g[row];
+}
+case '8': {
+    static const char *g[] = {
+        "01110", "10001", "10001", "01110",
+        "10001", "10001", "01110"
+    };
+    return g[row];
+}
+case '9': {
+    static const char *g[] = {
+        "01110", "10001", "10001", "01111",
+        "00001", "00001", "01110"
+    };
+    return g[row];
+}
+case ':': { static const char *g[]= {"00000","00100","00000","00000","00100","00000","00000"}; return g[row];}
+case '_': { static const char *g[]= {"00000","00000","00000","00000","00000","00000","11111"}; return g[row];}
+case '+': { static const char *g[]= {"00100","00100","11111","00100","00100","00100","00100"}; return g[row];}
+case '.': { static const char *g[]= {"00000","00000","00000","00000","00000","00000","00100"}; return g[row];}
+        default: return "00000";
+    }
+    
+}
+uint64_t cursor_x = 0;
+uint64_t cursor_y = 0;
+uint8_t background_red = 48;
+uint8_t background_green = 48;
+uint8_t background_blue = 48;
+char command_buffer[128];
+uint64_t input_len = 0;
+const char* os_version = "0.1.0\n";
+char saved_text[256];
+uint64_t saved_text_len = 0;
+char name_per[16][33];
+char value[16][129];
+
+void draw_rect(limine_framebuffer* fb,
+               uint64_t x, uint64_t y,
+               uint64_t width, uint64_t height,
+               uint8_t red, uint8_t green, uint8_t blue) {
+    for (uint64_t py = 0; py < height; py++) {
+        for (uint64_t px = 0; px < width; px++) {
+            draw_pixel(fb, x + px, y + py, red, green, blue);
+        }
+    }
+}
+
+void draw_char(limine_framebuffer* fb, uint64_t x, uint64_t y, char symbol, uint64_t scale) {
+    for (int row = 0; row <7; row++) {
+        const char* pixels = get_char_row(symbol, row);
+        for (int col = 0;col <5; col++) {
+            if (pixels[col] == '1') {
+                for (uint64_t sy = 0; sy < scale; sy++) {
+                    for (uint64_t sx =0; sx< scale; sx++) {
+                        draw_pixel(fb,x+col * scale +sx,y+row * scale +sy,text_red,text_green,text_blue);        
+                    }
+                }
+            }
+        }
+    }
+}
+
+void draw_text(limine_framebuffer* fb, const char* text, uint64_t scale) {
+    int let = 0;
+    uint64_t x_start = cursor_x;
+    for (int i = 0; text[i] !='\0'; i++) {
+        let += 1;
+    }
+    for (int i =0; i < let; i++) {
+        if (text[i] == '\n') {
+            cursor_y += 7 * scale + 1 * scale;
+            cursor_x = x_start;
+        }
+        if (text[i] == '\0') {
+            cursor_y += 7 * scale + 1 * scale;
+            cursor_x = x_start;
+        }
+        if (cursor_x + 5 * scale > fb->width) {
+            cursor_y = cursor_y + 7 * scale + 1 * scale;
+            cursor_x = x_start;
+        }
+        if (text[i] != '\n') {
+            draw_char(fb, cursor_x, cursor_y,text[i],scale);
+            cursor_x += 5 * scale + 1 * scale;
+        }
+    }
+    
+}
+void clear_screen(limine_framebuffer* fb, int ter) {
+    draw_rect(fb,0,0,fb->width,fb->height,background_red,background_green,background_blue);
+    cursor_x = 0;
+    cursor_y = 0;
+    if (ter > 0) {
+        cursor_x = 0;
+        cursor_y = 0;
+    }
+}
+uint8_t inb(uint16_t port) {
+    uint8_t result;
+    asm volatile("inb %1, %0" : "=a"(result) : "Nd"(port));
+    return result;
+}
+bool keyboard_ready() {
+    return (inb(0x64) & 1) != 0;
+}
+uint8_t keyboard_read() {
+    return inb(0x60);
+}
+
+bool shift_pressed = false;
+
+char scancode_to_char(uint8_t code) {
+    switch (code) {
+        case 0x1E: return shift_pressed ? 'A' : 'A';
+        case 0x30: return shift_pressed ? 'B' : 'B';
+        case 0x2E: return shift_pressed ? 'C' : 'C';
+        case 0x20: return 'D';
+        case 0x12: return 'E';
+        case 0x21: return 'F';
+        case 0x22: return 'G';
+        case 0x23: return 'H';
+        case 0x17: return 'I';
+        case 0x24: return 'J';
+        case 0x25: return 'K';
+        case 0x26: return 'L';
+        case 0x32: return 'M';
+        case 0x31: return 'N';
+        case 0x18: return 'O';
+        case 0x19: return 'P';
+        case 0x10: return 'Q';
+        case 0x13: return 'R';
+        case 0x1F: return 'S';
+        case 0x14: return 'T';
+        case 0x16: return 'U';
+        case 0x2F: return 'V';
+        case 0x11: return 'W';
+        case 0x2D: return 'X';
+        case 0x15: return 'Y';
+        case 0x2C: return 'Z';
+
+        case 0x0B: return '0';
+        case 0x02: return '1';
+        case 0x03: return '2';
+        case 0x04: return '3';
+        case 0x05: return '4';
+        case 0x06: return '5';
+        case 0x07: return '6';
+        case 0x08: return '7';
+        case 0x09: return '8';
+        case 0x0A: return '9';
+
+        case 0x39: return ' ';
+        default: return '\0';
+    }
+}
+void reset_shell(limine_framebuffer* fb) {
+    input_len = 0;
+    for (int i = 0; i < sizeof command_buffer; i++) {
+        command_buffer[i] = '\0';
+    }
+    clear_screen(fb, 1);
+}
+void command_buffer_clear() {
+    for (int i = 0; i < sizeof command_buffer; i++) {
+        command_buffer[i] = '\0';
+    }
+}
+
+void echo_text(limine_framebuffer* fb) {
+    int scale =2;
+    int let = 5;
+    for (int i = 5; command_buffer[i] !='\0'; i++) {
+        let += 1;
+    }
+    for (int i = 5; i < let; i++) {
+        char ch = command_buffer[i];
+        draw_char(fb,cursor_x,cursor_y, ch, 2);
+        cursor_x += 5 * scale + 1 * scale;
+    }
+    cursor_y += 7 * scale + 1 * scale;
+    cursor_x = 0;
+}
+void load_text(limine_framebuffer* fb) {
+    if (saved_text_len > 0) {
+        draw_text(fb, saved_text, 2);
+        draw_text(fb, "\n", 2); 
+        cursor_x = 0;
+    }
+    else {
+        draw_text(fb, "NO SAVED TEXT\n", 2);
+    }
+}
+void number_to_string(uint64_t number, char* buffer) {
+
+    int digits = 0;
+    uint64_t n_n = number;
+    if (n_n == 0) {
+        digits = 1;
+    }
+    while (n_n > 0) {
+        n_n /= 10;
+        digits += 1;
+    }
+    for (int i = 0; i != digits; i++) {
+        char gg = number % 10;
+        gg += '0';
+        number /= 10;
+        buffer[i] = gg;
+    }
+    
+
+    
+    int right = digits - 1;
+    for (int left = 0; left < right; left++, right--) {
+        char timeout;
+        timeout = buffer[right];
+        buffer[right] = buffer[left];
+        buffer[left] = timeout;
+    }
+    buffer[digits] = '\0';
+}
+int asdf =0;
+
+void user_per(limine_framebuffer fb, const char* first){
+    int asd = -1;
+    int abc = -1;
+    for (int i = 0; i <16; i++) {
+        if (name_per[i][0] == '\0') {
+            asd = i;
+            break;
+        }
+    }
+    if (asd == -1) {
+        return;
+    }
+    for (int i = 0; i < 32; i++) {
+        if (first[i] == '\0') {
+            break;
+        }
+        else {
+            name_per[asd][i] = first[i];
+        }
+        abc = i;
+    }
+    name_per[asd][abc + 1] = '\0'; 
+}
+void user_per_text(const char* first, const char* second) {
+    
+}
+
+void execute_command(limine_framebuffer* fb){
+    uint64_t scale = 2;
+    if (command_buffer[0] == 'H' && command_buffer[1] == 'E' && command_buffer[2] == 'L' && command_buffer[3] == 'P' && command_buffer[4] == '\0') {
+        draw_text(fb, "AVAILABLE COMMANDS\n", 2);
+        draw_text(fb, "HELP SHOW COMMANDS\n",2);
+        draw_text(fb, "ABOUT ABOUT OS\n",2);
+        draw_text(fb, "CLEAR CLEAR SCREEN\n", 2);
+        draw_text(fb, "REBOOT REBOOT\n", 2);
+        draw_text(fb, "VERSION VERSION OS\n", 2);
+        draw_text(fb, "ECHO ECHO TEXT\n", 2);
+        draw_text(fb, "COLOR RED RED TEXT\n", 2);
+        draw_text(fb, "COLOR GREEN GREEN TEXT\n", 2);
+        draw_text(fb, "COLOR BLUE BLUE TEXT\n", 2);
+        draw_text(fb, "COLOR RESET WHITE TEXT\n", 2);
+        draw_text(fb, "COLOR CUSTOM CUSTOM COLOR FOR TEXT\n", 2);
+        draw_text(fb, "SAVE SAVE TEXT\n", 2);
+        draw_text(fb, "LOAD  LOAD TEXT\n", 2);
+        draw_text(fb, "DELETE DELETE TEXT\n", 2);
+        draw_text(fb, "APPEND ADD TEXT TO TEXT\n", 2);
+        draw_text(fb, "LIST INFORMATION PRO TEXT\n",2);
+        command_buffer_clear();
+    } else if (command_buffer[0] == 'A' && command_buffer[1] == 'B' && command_buffer[2] == 'O' && command_buffer[3] == 'U' && command_buffer[4] == 'T' && command_buffer[5] == '\0') {
+        draw_text(fb, "MUSICOS64\n", 2);
+        draw_text(fb, "A CUSTOM OPERATING SYSTEM\n", 2);
+        draw_text(fb, "MUSICO64 IS A C++ KERNEL\n",2);
+        draw_text(fb, "ARCHITECTURE: X86_64\n",2);
+        command_buffer_clear();
+    } else if (command_buffer[0] == 'C' && command_buffer[1] == 'L' && command_buffer[2] == 'E' && command_buffer[3] == 'A' && command_buffer[4] == 'R' && command_buffer[5] == '\0') {
+        clear_screen(fb,1);
+        command_buffer_clear();
+    } else if (command_buffer[0] == 'R' && command_buffer[1] == 'E' && command_buffer[2] == 'B' && command_buffer[3] == 'O' && command_buffer[4] == 'O' && command_buffer[5] == 'T' && command_buffer[6] == '\0') {
+        reset_shell(fb);
+        command_buffer_clear();
+    } else if (command_buffer[0] == 'V' && command_buffer[1] == 'E' && command_buffer[2] == 'R' && command_buffer[3] == 'S' && command_buffer[4] == 'I' && command_buffer[5] == 'O' && command_buffer[6] == 'N' && command_buffer[7] == '\0') {
+        draw_text(fb, os_version, 2);
+        command_buffer_clear();
+    } else if (command_buffer[0] == 'E' && command_buffer[1] == 'C' && command_buffer[2] == 'H' && command_buffer[3] == 'O' && command_buffer[4] == ' ') {
+        echo_text(fb);
+        command_buffer_clear();
+    } else if (command_buffer[0] == 'C' && command_buffer[1] == 'O' && command_buffer[2] == 'L' && command_buffer[3] == 'O' && command_buffer[4] == 'R' && command_buffer[5]== ' ' && command_buffer[6] == 'R' && command_buffer[7] == 'E' && command_buffer[8] == 'D' && command_buffer[9] == '\0') {
+        text_red = 255;
+        text_green = 0;
+        text_blue = 0;
+        command_buffer_clear();
+    } else if (command_buffer[0] == 'C' && command_buffer[1] == 'O' && command_buffer[2] == 'L' && command_buffer[3] == 'O' && command_buffer[4] == 'R' && command_buffer[5]== ' ' && command_buffer[6] == 'G' && command_buffer[7] == 'R' && command_buffer[8] == 'E' && command_buffer[9] == 'E' && command_buffer[10] == 'N' && command_buffer[11] == '\0') {
+        text_red = 0;
+        text_green = 255;
+        text_blue = 0;
+        command_buffer_clear();
+    } else if (command_buffer[0] == 'C' && command_buffer[1] == 'O' && command_buffer[2] == 'L' && command_buffer[3] == 'O' && command_buffer[4] == 'R' && command_buffer[5]== ' ' && command_buffer[6] == 'B' && command_buffer[7] == 'L' && command_buffer[8] == 'U' && command_buffer[9] == 'E' && command_buffer[10] == '\0') {
+        text_red = 0;
+        text_green = 0;
+        text_blue = 255;
+        command_buffer_clear();
+    } else if (command_buffer[0] == 'C' && command_buffer[1] == 'O' && command_buffer[2] == 'L' && command_buffer[3] == 'O' && command_buffer[4] == 'R' && command_buffer[5]== ' ' && command_buffer[6] == 'R' && command_buffer[7] == 'E' && command_buffer[8] == 'S' && command_buffer[9] == 'E' && command_buffer[10] == 'T' && command_buffer[11] == '\0') {
+        text_red = 255;
+        text_green = 255;
+        text_blue = 255;
+        command_buffer_clear();
+    } else if (command_buffer[0] == 'C' && command_buffer[1] == 'O' && command_buffer[2] == 'L' && command_buffer[3] == 'O' && command_buffer[4] == 'R' && command_buffer[5] == ' ' && command_buffer[6] == 'C' && command_buffer[7] == 'U' && command_buffer[8] == 'S' && command_buffer[9] == 'T' && command_buffer[10] == 'O' && command_buffer[11] == 'M' && command_buffer[12] == ' ' && command_buffer[24] =='\0') {
+        if (command_buffer[15] == 'N') {
+            if (command_buffer[14] == 'N') {
+                char no_num_red = command_buffer[13];
+                uint8_t red = no_num_red - '0';
+                text_red = red;
+            }
+            else {
+                char no_num_red = command_buffer[13] + command_buffer[14];
+                uint8_t red = no_num_red - '0';
+                text_red = red; 
+            }
+        }
+        else {
+            char no_num_red = command_buffer[13] + command_buffer[14] + command_buffer[15];
+            uint8_t red = no_num_red - '0';
+            text_red = red;
+        }
+        if (command_buffer[19] == 'N') {
+            if (command_buffer[18] == 'N'){
+                char no_num_green = command_buffer[17];
+                uint8_t green = no_num_green - '0';
+                text_green = green;
+            }
+            else {
+                char no_num_green = command_buffer[17] + command_buffer[18];
+                uint8_t green = no_num_green - '0';
+                text_green = green;
+            }
+        } 
+        else {
+            char no_num_green = command_buffer[17] + command_buffer[18] + command_buffer[19];
+            uint8_t green = no_num_green - '0';
+            text_green = green;
+        }
+        if (command_buffer[23] == 'N') {
+            if (command_buffer[22] == 'N') {
+                char no_num_blue = command_buffer[21];
+                uint8_t blue = no_num_blue - '0';
+                text_blue = blue;
+            }
+            else {
+                char no_num_blue = command_buffer[21] + command_buffer[22];
+                uint8_t blue = no_num_blue - '0';
+                text_blue = blue;
+            }
+        }
+        else {
+            char no_num_blue = command_buffer[21] + command_buffer[22] + command_buffer[23];
+            uint8_t blue = no_num_blue - '0';
+            text_blue = blue;
+        }
+        command_buffer_clear();
+    }
+    else if (command_buffer[0] == 'S' && command_buffer[1] == 'A' && command_buffer[2] == 'V' && command_buffer[3] == 'E' && command_buffer[4] == ' ') {
+        int in = 0;
+        saved_text_len = 0;
+        for (int i = 5; command_buffer[i] != '\0'; i++) {
+            saved_text_len += 1;
+        }
+        if (saved_text_len > 255) {
+            saved_text_len = 255;
+        }
+        for (int i = 5; in < saved_text_len; i++) {
+            saved_text[in] = command_buffer[i];
+            in += 1;
+        }
+        saved_text[saved_text_len] = '\0';
+        command_buffer_clear();
+    }
+    else if (command_buffer[0] == 'L' && command_buffer[1] == 'O' && command_buffer[2] == 'A' && command_buffer[3] == 'D' && command_buffer[4] == '\0') {
+        load_text(fb);
+        command_buffer_clear();
+    } else if (command_buffer[0] == 'D' && command_buffer[1] == 'E' && command_buffer[2] == 'L' && command_buffer[3] == 'E' && command_buffer[4] == 'T' && command_buffer[5] =='E' && command_buffer[6] == '\0') {
+        for (int i =0; i <255; i++) {
+            saved_text[i] = '\0';
+            command_buffer_clear();
+        }
+    } else if (command_buffer[0] == 'A' && command_buffer[1] == 'P' && command_buffer[2] == 'P' && command_buffer[3] == 'E' && command_buffer[4] == 'N' && command_buffer[5] == 'D' && command_buffer[6] == ' ') {
+        int in = saved_text_len;
+        for (int i = 7; command_buffer[i] != '\0'; i++) {
+            saved_text_len += 1;
+        }
+        if (saved_text_len > 255) {
+            saved_text_len = 255;
+        }
+        for (int i = 7; in < saved_text_len; i++) {
+            saved_text[in] = command_buffer[i];
+            in += 1;
+        }
+        saved_text[saved_text_len] = '\0';
+        command_buffer_clear();
+    } else if (command_buffer[0] == 'L' && command_buffer[1] == 'I' && command_buffer[2] == 'S' && command_buffer[3] == 'T' && command_buffer[4] == '\0') {
+        char buffer[21];
+        uint64_t free_space = 255 - saved_text_len;
+        
+        draw_text(fb, "STORAGE INFORMATION\n", 2);
+        if (saved_text_len > 0) {
+            draw_text(fb, "STATUS: DATA SAVED\n", 2);
+        }
+        else {
+            draw_text(fb, "STATUS: DATA NOT SAVED\n", 2);
+        }
+        number_to_string(saved_text_len, buffer);
+        draw_text(fb, "TEXT LENGTH: ", 2);
+        draw_text(fb, buffer,2);
+        cursor_y += 7 *scale + 1 * scale;
+        cursor_x = 0;
+        for (int i = 0; i != 21; i++) {
+            buffer[i] = '\0';
+        }
+        number_to_string(free_space, buffer);
+        draw_text(fb, "FREE SPACE: ", 2);
+        draw_text(fb, buffer,2);
+        cursor_y += 7 *scale + 1 * scale;
+        cursor_x = 0;
+        for (int i = 0; i != 21; i++) {
+            buffer[i] = '\0';
+        }
+        draw_text(fb, "CAPACITY: 255 BYTES\n", 2);
+        command_buffer_clear();
+    } 
+    else if (command_buffer != 0) {
+        draw_text(fb, "UNKNOWN COMMAND\n", 2);
+        command_buffer_clear();
+    } 
+     
+}
+
+
+void keyboard_poll(limine_framebuffer* fb) {
+    uint64_t scale = 2;
+    if (!keyboard_ready()) return;
+
+    uint8_t code = keyboard_read();
+
+    // Shift натиснуто
+    if (code == 0x2A || code == 0x36) {
+        shift_pressed = true;
+        return;
+    }
+
+    // Shift відпущено
+    if (code == 0xAA || code == 0xB6) {
+        shift_pressed = false;
+        return;
+    }
+
+    // Ігноруємо коди відпускання інших клавіш
+    if (code & 0x80) return;
+
+    // Enter
+    if (code == 0x1C) {
+        cursor_x = 0;
+        cursor_y += 7 * scale;
+        execute_command(fb);
+        input_len = 0;
+        return;
+    }
+
+    // Backspace
+    if (code == 0x0E) {
+        if (cursor_x >= 5*scale && input_len > 0) {
+            command_buffer[input_len - 1] = '\0';
+            input_len -= 1;
+            cursor_x -= 5 *scale + 1 *scale;
+            draw_rect(fb, cursor_x, cursor_y, 5 *scale, 7*scale,
+                      background_red, background_green, background_blue);
+        }
+        return;
+    }
+
+    char ch = scancode_to_char(code);
+
+    if (ch != '\0') {
+        command_buffer[input_len] = ch;
+        input_len += 1;        
+        draw_char(fb, cursor_x, cursor_y, ch, 2);
+        cursor_x += 5 * scale + 1 * scale;
+
+        if (cursor_x + 20 > fb->width) {
+            cursor_x = 0;
+            cursor_y += 7 * scale + 1 * scale;
+        }
+    }
+}
+
+
+
+void kernel_init(limine_framebuffer* fb) {
+    if (fb == nullptr) {
+        return;
+    }
+    if (fb->bpp != 32) {
+        return;
+    }
+    uint64_t width = fb->width;
+    uint64_t height = fb->height;
+    auto address = fb->address;
+    if (address == nullptr) {
+        return;
+    }
+    volatile uint32_t* fb_ptr = static_cast<volatile uint32_t*>(address);
+    int x = 0;
+    int y = 0;
+    if (x < width && y < height) {
+        fb_ptr[y * (fb->pitch / 4) + x] = 0x00FF0000;
+    }
+
+    draw_rect(fb,0,0,fb->width,fb->height,background_red,background_green,background_blue);
+    
+    
+    draw_text(fb, "MUSICOOS\n64",4);
+
+    clear_screen(fb, 1);
+
+}
+
+
 
 // Build a pixel from 8-bit red, green and blue values following the channel
 // layout of the framebuffer.
@@ -122,6 +899,7 @@ extern "C" void kmain() {
     // Ensure the bootloader actually understands our base revision (see spec).
     if (LIMINE_BASE_REVISION_SUPPORTED(limine_base_revision) == false) {
         hcf();
+        
     }
 
     // Call global constructors.
@@ -131,13 +909,11 @@ extern "C" void kmain() {
     for (void (**ctor)() = __ctors_end; ctor > __ctors_start;) {
         (*--ctor)();
     }
+    
 
     // Ensure we got a framebuffer.
-    if (framebuffer_request.response == nullptr
-     || framebuffer_request.response->framebuffer_count < 1) {
-        hcf();
-    }
-
+    
+    
     // Print the pattern to every framebuffer.
     for (std::uint64_t i = 0; i < framebuffer_request.response->framebuffer_count; i++) {
         limine_framebuffer *framebuffer = framebuffer_request.response->framebuffers[i];
@@ -147,9 +923,20 @@ extern "C" void kmain() {
             hcf();
         }
 
-        fb_pattern(framebuffer);
+        kernel_init(framebuffer);
     }
 
     // We're done, just hang...
-    hcf();
+    if (framebuffer_request.response != nullptr &&
+    framebuffer_request.response->framebuffer_count > 0) {
+    limine_framebuffer* fb =
+        framebuffer_request.response->framebuffers[0];
+
+    while (true) {
+        keyboard_poll(fb);
+    }
 }
+
+hcf();
+}
+
