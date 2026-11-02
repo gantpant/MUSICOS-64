@@ -2,6 +2,8 @@
 #include <cstddef>
 #include <limine.h>
 #include "cat_bitmap.hpp"
+#include "cat_photo.hpp"
+#include "cat_photo2.hpp"
 
 // Set the base revision to 6, this is recommended as this is the latest
 // base revision described by the Limine boot protocol specification.
@@ -119,6 +121,46 @@ void draw_pixel(limine_framebuffer* fb,
 
     pixels[y * (fb->pitch / 4) + x] = color;
 } 
+
+
+void draw_photo(
+    limine_framebuffer* fb,
+    const uint8_t* photo,
+    uint64_t photo_width,
+    uint64_t photo_height,
+    uint64_t screen_x,
+    uint64_t screen_y
+) {
+    if (fb == nullptr || fb->address == nullptr)
+        return;
+
+    if (fb->bpp != 32)
+        return;
+
+    if (screen_x >= fb->width || screen_y >= fb->height)
+        return;
+
+    for (uint64_t y = 0; y < photo_height; y++) {
+        for (uint64_t x = 0; x < photo_width; x++) {
+
+            uint64_t px = screen_x + x;
+            uint64_t py = screen_y + y;
+
+            if (px >= fb->width || py >= fb->height)
+                continue;
+
+            uint64_t index = (y * photo_width + x) * 3;
+
+            uint8_t red   = photo[index];
+            uint8_t green = photo[index + 1];
+            uint8_t blue  = photo[index + 2];
+
+            draw_pixel(fb, px, py, red, green, blue);
+        }
+    }
+}
+
+
 void draw_cat(
     limine_framebuffer* fb,
     uint64_t x,
@@ -419,6 +461,17 @@ char saved_text[256];
 uint64_t saved_text_len = 0;
 char name_per[16][33];
 char value[16][129];
+char first_text[256];
+char second_text[256];
+char third_text[256];
+char four_text[256];
+char five_text[256];
+int first_text_len = 0;
+int second_text_len = 0;
+int third_text_len = 0;
+int four_text_len = 0;
+int five_text_len = 0;
+
 
 void draw_rect(limine_framebuffer* fb,
                uint64_t x, uint64_t y,
@@ -576,6 +629,36 @@ void load_text(limine_framebuffer* fb) {
         draw_text(fb, "NO SAVED TEXT\n", 2);
     }
 }
+void loading_text(limine_framebuffer* fb, int i) {
+    if (i == 1) {
+        if (first_text_len > 0) {
+            draw_text(fb, first_text, 2);
+        }   
+    }
+    if (i == 2) {
+        if (second_text_len > 0) {
+            draw_text(fb, second_text, 2);
+        }
+    }
+    if (i == 3) {
+        if (third_text_len > 0) {
+            draw_text(fb, third_text, 2);
+        }
+    }
+    if (i == 4) {
+        if (four_text_len > 0) {
+            draw_text(fb, four_text, 2);
+        }
+    }
+    if (i == 5) {
+        if (five_text_len > 0) {
+            draw_text(fb, five_text, 2);
+        }
+    }
+    else {
+        draw_text(fb, "TEXT NOT SAVED\n", 2);
+    }
+}
 void number_to_string(uint64_t number, char* buffer) {
 
     int digits = 0;
@@ -665,45 +748,45 @@ void execute_command(limine_framebuffer* fb){
         draw_text(fb, "DELETE DELETE TEXT\n", 2);
         draw_text(fb, "APPEND ADD TEXT TO TEXT\n", 2);
         draw_text(fb, "LIST INFORMATION PRO TEXT\n",2);
-        command_buffer_clear();
+        
     } else if (command_buffer[0] == 'A' && command_buffer[1] == 'B' && command_buffer[2] == 'O' && command_buffer[3] == 'U' && command_buffer[4] == 'T' && command_buffer[5] == '\0') {
         draw_text(fb, "MUSICOS64\n", 2);
         draw_text(fb, "A CUSTOM OPERATING SYSTEM\n", 2);
         draw_text(fb, "MUSICO64 IS A C++ KERNEL\n",2);
         draw_text(fb, "ARCHITECTURE: X86_64\n",2);
-        command_buffer_clear();
+        
     } else if (command_buffer[0] == 'C' && command_buffer[1] == 'L' && command_buffer[2] == 'E' && command_buffer[3] == 'A' && command_buffer[4] == 'R' && command_buffer[5] == '\0') {
         clear_screen(fb,1);
-        command_buffer_clear();
+        
     } else if (command_buffer[0] == 'R' && command_buffer[1] == 'E' && command_buffer[2] == 'B' && command_buffer[3] == 'O' && command_buffer[4] == 'O' && command_buffer[5] == 'T' && command_buffer[6] == '\0') {
         reset_shell(fb);
-        command_buffer_clear();
+        
     } else if (command_buffer[0] == 'V' && command_buffer[1] == 'E' && command_buffer[2] == 'R' && command_buffer[3] == 'S' && command_buffer[4] == 'I' && command_buffer[5] == 'O' && command_buffer[6] == 'N' && command_buffer[7] == '\0') {
         draw_text(fb, os_version, 2);
-        command_buffer_clear();
+        
     } else if (command_buffer[0] == 'E' && command_buffer[1] == 'C' && command_buffer[2] == 'H' && command_buffer[3] == 'O' && command_buffer[4] == ' ') {
         echo_text(fb);
-        command_buffer_clear();
+        
     } else if (command_buffer[0] == 'C' && command_buffer[1] == 'O' && command_buffer[2] == 'L' && command_buffer[3] == 'O' && command_buffer[4] == 'R' && command_buffer[5]== ' ' && command_buffer[6] == 'R' && command_buffer[7] == 'E' && command_buffer[8] == 'D' && command_buffer[9] == '\0') {
         text_red = 255;
         text_green = 0;
         text_blue = 0;
-        command_buffer_clear();
+        
     } else if (command_buffer[0] == 'C' && command_buffer[1] == 'O' && command_buffer[2] == 'L' && command_buffer[3] == 'O' && command_buffer[4] == 'R' && command_buffer[5]== ' ' && command_buffer[6] == 'G' && command_buffer[7] == 'R' && command_buffer[8] == 'E' && command_buffer[9] == 'E' && command_buffer[10] == 'N' && command_buffer[11] == '\0') {
         text_red = 0;
         text_green = 255;
         text_blue = 0;
-        command_buffer_clear();
+        
     } else if (command_buffer[0] == 'C' && command_buffer[1] == 'O' && command_buffer[2] == 'L' && command_buffer[3] == 'O' && command_buffer[4] == 'R' && command_buffer[5]== ' ' && command_buffer[6] == 'B' && command_buffer[7] == 'L' && command_buffer[8] == 'U' && command_buffer[9] == 'E' && command_buffer[10] == '\0') {
         text_red = 0;
         text_green = 0;
         text_blue = 255;
-        command_buffer_clear();
+        
     } else if (command_buffer[0] == 'C' && command_buffer[1] == 'O' && command_buffer[2] == 'L' && command_buffer[3] == 'O' && command_buffer[4] == 'R' && command_buffer[5]== ' ' && command_buffer[6] == 'R' && command_buffer[7] == 'E' && command_buffer[8] == 'S' && command_buffer[9] == 'E' && command_buffer[10] == 'T' && command_buffer[11] == '\0') {
         text_red = 255;
         text_green = 255;
         text_blue = 255;
-        command_buffer_clear();
+        
     } else if (command_buffer[0] == 'C' && command_buffer[1] == 'O' && command_buffer[2] == 'L' && command_buffer[3] == 'O' && command_buffer[4] == 'R' && command_buffer[5] == ' ' && command_buffer[6] == 'C' && command_buffer[7] == 'U' && command_buffer[8] == 'S' && command_buffer[9] == 'T' && command_buffer[10] == 'O' && command_buffer[11] == 'M' && command_buffer[12] == ' ' && command_buffer[24] =='\0') {
         if (command_buffer[15] == 'N') {
             if (command_buffer[14] == 'N') {
@@ -756,7 +839,7 @@ void execute_command(limine_framebuffer* fb){
             uint8_t blue = no_num_blue - '0';
             text_blue = blue;
         }
-        command_buffer_clear();
+        
     }
     else if (command_buffer[0] == 'S' && command_buffer[1] == 'A' && command_buffer[2] == 'V' && command_buffer[3] == 'E' && command_buffer[4] == ' ') {
         int in = 0;
@@ -772,15 +855,15 @@ void execute_command(limine_framebuffer* fb){
             in += 1;
         }
         saved_text[saved_text_len] = '\0';
-        command_buffer_clear();
+        
     }
     else if (command_buffer[0] == 'L' && command_buffer[1] == 'O' && command_buffer[2] == 'A' && command_buffer[3] == 'D' && command_buffer[4] == '\0') {
         load_text(fb);
-        command_buffer_clear();
+        
     } else if (command_buffer[0] == 'D' && command_buffer[1] == 'E' && command_buffer[2] == 'L' && command_buffer[3] == 'E' && command_buffer[4] == 'T' && command_buffer[5] =='E' && command_buffer[6] == '\0') {
         for (int i =0; i <255; i++) {
             saved_text[i] = '\0';
-            command_buffer_clear();
+            
         }
     } else if (command_buffer[0] == 'A' && command_buffer[1] == 'P' && command_buffer[2] == 'P' && command_buffer[3] == 'E' && command_buffer[4] == 'N' && command_buffer[5] == 'D' && command_buffer[6] == ' ') {
         int in = saved_text_len;
@@ -795,7 +878,7 @@ void execute_command(limine_framebuffer* fb){
             in += 1;
         }
         saved_text[saved_text_len] = '\0';
-        command_buffer_clear();
+        
     } else if (command_buffer[0] == 'L' && command_buffer[1] == 'I' && command_buffer[2] == 'S' && command_buffer[3] == 'T' && command_buffer[4] == '\0') {
         char buffer[21];
         uint64_t free_space = 255 - saved_text_len;
@@ -824,16 +907,100 @@ void execute_command(limine_framebuffer* fb){
             buffer[i] = '\0';
         }
         draw_text(fb, "CAPACITY: 255 BYTES\n", 2);
-        command_buffer_clear();
+        
     } else if (command_buffer[0]== 'Z' && command_buffer[1] == 'I' && command_buffer[2] == 'G') {
         draw_cat(fb, 100, 50, 2, 0, 0, 0);
-        command_buffer_clear();
+        draw_photo(fb,cat_photo,PHOTO_WIDTH,PHOTO_HEIGHT,380,0);
+        draw_photo(fb,cat_photo2,PHOTO2_WIDTH,PHOTO2_HEIGHT,760,0);
+        
+    }else if (command_buffer[0] == 'D' && command_buffer[1]== 'S' && command_buffer[2] == 'A' && command_buffer[3] == 'V' && command_buffer[4]== 'E' && command_buffer[5] == ' ' && command_buffer[7]== ' ') {
+        for (int i = 0; i <255; i++) {
+            first_text[i] = '\0';
+            second_text[i] = '\0';
+            third_text[i] = '\0';
+            four_text[i] = '\0';
+            five_text[i] = '\0';
+        }
+        first_text_len = 0;
+        second_text_len = 0;
+        third_text_len = 0;
+        four_text_len = 0;
+        five_text_len = 0;
+        if (command_buffer[6] == '1') {
+            for (int i = 8; command_buffer[i] != '\0'; i++) {
+                first_text[first_text_len] = command_buffer[i];
+                first_text_len += 1;
+            } 
+        }
+        else if (command_buffer[6] == '2') {
+            for (int i = 8; command_buffer[i] != '\0'; i++) {
+                second_text[second_text_len] = command_buffer[i];
+                second_text_len += 1;
+            } 
+        }
+        else if (command_buffer[6] == '3') {
+            for (int i = 8; command_buffer[i] != '\0'; i++) {
+                third_text[third_text_len] = command_buffer[i];
+                third_text_len += 1;
+            } 
+        }
+        else if (command_buffer[6] == '4') {
+            for (int i = 8; command_buffer[i] != '\0'; i++) {
+                four_text[four_text_len] = command_buffer[i];
+                four_text_len += 1;
+            } 
+        }
+        else if (command_buffer[6] == '5') {
+            for (int i = 8; command_buffer[i] != '\0'; i++) {
+                five_text[five_text_len] = command_buffer[i];
+                five_text_len += 1;
+            } 
+        }
+        if (first_text_len > 255) {
+            saved_text_len = 255;
+        }
+        else if (second_text_len > 255) {
+            second_text_len = 255;
+        }
+        else if (third_text_len > 255) {
+            second_text_len = 255;
+        }
+        else if (four_text_len > 255) {
+            second_text_len = 255;
+        }
+        else if (five_text_len > 255) {
+            second_text_len = 255;
+        }
+        first_text[first_text_len] = '\0';
+        second_text[second_text_len] = '\0';
+        third_text[third_text_len] = '\0';
+        four_text[four_text_len] = '\0';
+        five_text[five_text_len] = '\0';
+    } else if (command_buffer[0] == 'D' && command_buffer[1] == 'L' && command_buffer[2] == 'O' && command_buffer[3] == 'A' && command_buffer[4] == 'D' && command_buffer[5] == ' ' && command_buffer[7] == '\0') {
+        if (command_buffer[6] == '1') {
+            loading_text(fb, 1);
+        }
+        else if (command_buffer[6] == '2'){
+            loading_text(fb, 2);
+        }
+        else if (command_buffer[6] == '3'){
+            loading_text(fb, 3);
+        }
+        else if (command_buffer[6] == '4'){
+            loading_text(fb, 4);
+        }
+        else if (command_buffer[6] == '5'){
+            loading_text(fb, 5);
+        }
+        else {
+            draw_text(fb, "NO", 2);
+        }
     }
     else if (command_buffer != 0) {
         draw_text(fb, "UNKNOWN COMMAND\n", 2);
-        command_buffer_clear();
+        
     } 
-     
+    command_buffer_clear();
 }
 
 
