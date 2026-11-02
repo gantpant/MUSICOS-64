@@ -1,6 +1,7 @@
 #include <cstdint>
 #include <cstddef>
 #include <limine.h>
+#include "cat_bitmap.hpp"
 
 // Set the base revision to 6, this is recommended as this is the latest
 // base revision described by the Limine boot protocol specification.
@@ -118,6 +119,47 @@ void draw_pixel(limine_framebuffer* fb,
 
     pixels[y * (fb->pitch / 4) + x] = color;
 } 
+void draw_cat(
+    limine_framebuffer* fb,
+    uint64_t x,
+    uint64_t y,
+    uint32_t scale,
+    uint8_t red,
+    uint8_t green,
+    uint8_t blue
+) {
+    if (fb == nullptr || fb->address == nullptr ||
+        fb->bpp != 32 || scale == 0) {
+        return;
+    }
+
+    for (uint32_t py = 0; py < CAT_BITMAP_HEIGHT; py++) {
+        for (uint32_t px = 0; px < CAT_BITMAP_WIDTH; px++) {
+
+            uint32_t index = py * CAT_BITMAP_WIDTH + px;
+
+            if ((CAT_BITMAP[index / 8] & (1u << (index % 8))) == 0) {
+                continue;
+            }
+
+            for (uint32_t sy = 0; sy < scale; sy++) {
+                uint64_t screen_y =
+                    y + static_cast<uint64_t>(py) * scale + sy;
+
+                if (screen_y >= fb->height) continue;
+
+                for (uint32_t sx = 0; sx < scale; sx++) {
+                    uint64_t screen_x =
+                        x + static_cast<uint64_t>(px) * scale + sx;
+
+                    if (screen_x >= fb->width) continue;
+
+                    draw_pixel(fb, screen_x, screen_y, red, green, blue);
+                }
+            }
+        }
+    }
+}
 
 const char *get_char_row(char symbol, int row){
     switch (symbol){
@@ -360,6 +402,7 @@ case ':': { static const char *g[]= {"00000","00100","00000","00000","00100","00
 case '_': { static const char *g[]= {"00000","00000","00000","00000","00000","00000","11111"}; return g[row];}
 case '+': { static const char *g[]= {"00100","00100","11111","00100","00100","00100","00100"}; return g[row];}
 case '.': { static const char *g[]= {"00000","00000","00000","00000","00000","00000","00100"}; return g[row];}
+case '@': { static const char *g[]= {"10111","10100","10100","11111","00101","00101","11101"}; return g[row];}
         default: return "00000";
     }
     
@@ -564,7 +607,19 @@ void number_to_string(uint64_t number, char* buffer) {
 }
 int asdf =0;
 
-void user_per(limine_framebuffer fb, const char* first){
+void user_value(int asd, const char* second) {
+    int a = 0;
+    for (int i =0; i < 128; i++) {
+        if (second[i] == '\0') {
+            break;
+        }
+        value[asd][i] = second[i];
+        a +=1;
+    }
+    value[asd][a] = '\0';
+}
+
+void user_per(limine_framebuffer fb, const char* first, const char* second){
     int asd = -1;
     int abc = -1;
     for (int i = 0; i <16; i++) {
@@ -585,11 +640,10 @@ void user_per(limine_framebuffer fb, const char* first){
         }
         abc = i;
     }
-    name_per[asd][abc + 1] = '\0'; 
+    name_per[asd][abc + 1] = '\0';
+    user_value(asd, second) ;
 }
-void user_per_text(const char* first, const char* second) {
-    
-}
+
 
 void execute_command(limine_framebuffer* fb){
     uint64_t scale = 2;
@@ -771,7 +825,10 @@ void execute_command(limine_framebuffer* fb){
         }
         draw_text(fb, "CAPACITY: 255 BYTES\n", 2);
         command_buffer_clear();
-    } 
+    } else if (command_buffer[0]== 'Z' && command_buffer[1] == 'I' && command_buffer[2] == 'G') {
+        draw_cat(fb, 100, 50, 2, 0, 0, 0);
+        command_buffer_clear();
+    }
     else if (command_buffer != 0) {
         draw_text(fb, "UNKNOWN COMMAND\n", 2);
         command_buffer_clear();
