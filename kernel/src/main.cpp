@@ -655,9 +655,7 @@ void loading_text(limine_framebuffer* fb, int i) {
             draw_text(fb, five_text, 2);
         }
     }
-    else {
-        draw_text(fb, "TEXT NOT SAVED\n", 2);
-    }
+
 }
 void number_to_string(uint64_t number, char* buffer) {
 
@@ -899,7 +897,7 @@ void execute_command(limine_framebuffer* fb){
             buffer[i] = '\0';
         }
         number_to_string(free_space, buffer);
-        draw_text(fb, "FREE SPACE: ", 2);
+        draw_text(fb, "FREE SPACE ON NULL DISK: ", 2);
         draw_text(fb, buffer,2);
         cursor_y += 7 *scale + 1 * scale;
         cursor_x = 0;
@@ -914,43 +912,51 @@ void execute_command(limine_framebuffer* fb){
         draw_photo(fb,cat_photo2,PHOTO2_WIDTH,PHOTO2_HEIGHT,760,0);
         
     }else if (command_buffer[0] == 'D' && command_buffer[1]== 'S' && command_buffer[2] == 'A' && command_buffer[3] == 'V' && command_buffer[4]== 'E' && command_buffer[5] == ' ' && command_buffer[7]== ' ') {
-        for (int i = 0; i <255; i++) {
-            first_text[i] = '\0';
-            second_text[i] = '\0';
-            third_text[i] = '\0';
-            four_text[i] = '\0';
-            five_text[i] = '\0';
-        }
-        first_text_len = 0;
-        second_text_len = 0;
-        third_text_len = 0;
-        four_text_len = 0;
-        five_text_len = 0;
         if (command_buffer[6] == '1') {
+            for (int i =0; i<255; i++) {
+                first_text[i] = '\0';
+            }
+            first_text_len = 0;
             for (int i = 8; command_buffer[i] != '\0'; i++) {
                 first_text[first_text_len] = command_buffer[i];
                 first_text_len += 1;
             } 
         }
         else if (command_buffer[6] == '2') {
+            for (int i =0; i < 255; i++) {
+                second_text[i] = '\0';
+            }
+            second_text_len = 0;
             for (int i = 8; command_buffer[i] != '\0'; i++) {
                 second_text[second_text_len] = command_buffer[i];
                 second_text_len += 1;
             } 
         }
         else if (command_buffer[6] == '3') {
+            for (int i = 0; i < 255; i++) {
+                third_text[i] = '\0';
+            }
+            third_text_len = 0;
             for (int i = 8; command_buffer[i] != '\0'; i++) {
                 third_text[third_text_len] = command_buffer[i];
                 third_text_len += 1;
             } 
         }
         else if (command_buffer[6] == '4') {
+            for (int i = 0; i < 255; i++) {
+                four_text[i] = '\0';
+            }
+            four_text_len = 0;
             for (int i = 8; command_buffer[i] != '\0'; i++) {
                 four_text[four_text_len] = command_buffer[i];
                 four_text_len += 1;
             } 
         }
         else if (command_buffer[6] == '5') {
+            for (int i = 0; i < 255; i++) {
+                five_text[i] = '\0';
+            }
+            five_text_len = 0;
             for (int i = 8; command_buffer[i] != '\0'; i++) {
                 five_text[five_text_len] = command_buffer[i];
                 five_text_len += 1;
@@ -978,23 +984,50 @@ void execute_command(limine_framebuffer* fb){
         five_text[five_text_len] = '\0';
     } else if (command_buffer[0] == 'D' && command_buffer[1] == 'L' && command_buffer[2] == 'O' && command_buffer[3] == 'A' && command_buffer[4] == 'D' && command_buffer[5] == ' ' && command_buffer[7] == '\0') {
         if (command_buffer[6] == '1') {
-            loading_text(fb, 1);
+            if (first_text[0] != '\0') {
+                loading_text(fb, 5);
+            }
+            else {
+                draw_text(fb, "NO TEXT SAVED", 2);
+            }
         }
         else if (command_buffer[6] == '2'){
-            loading_text(fb, 2);
+            if (second_text[0] != '\0') {
+                loading_text(fb, 5);
+            }
+            else {
+                draw_text(fb, "NO TEXT SAVED", 2);
+            }
         }
         else if (command_buffer[6] == '3'){
-            loading_text(fb, 3);
+            if (third_text[0] != '\0') {
+                loading_text(fb, 5);
+            }
+            else {
+                draw_text(fb, "NO TEXT SAVED", 2);
+            }
         }
         else if (command_buffer[6] == '4'){
-            loading_text(fb, 4);
+            if (four_text[0] != '\0') {
+                loading_text(fb, 5);
+            }
+            else {
+                draw_text(fb, "NO TEXT SAVED", 2);
+            }
         }
         else if (command_buffer[6] == '5'){
-            loading_text(fb, 5);
+            if (five_text[0] != '\0') {
+                loading_text(fb, 5);
+            }
+            else {
+                draw_text(fb, "NO TEXT SAVED", 2);
+            }
         }
         else {
             draw_text(fb, "NO", 2);
         }
+        cursor_x = 0;
+        cursor_y += 7 *scale + 1 *scale;
     }
     else if (command_buffer != 0) {
         draw_text(fb, "UNKNOWN COMMAND\n", 2);
