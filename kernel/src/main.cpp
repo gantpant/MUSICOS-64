@@ -456,7 +456,7 @@ uint8_t background_green = 48;
 uint8_t background_blue = 48;
 char command_buffer[128];
 uint64_t input_len = 0;
-const char* os_version = "0.1.0\n";
+const char* os_version = "0.2.0\n";
 char saved_text[256];
 uint64_t saved_text_len = 0;
 char name_per[16][33];
@@ -726,6 +726,7 @@ void user_per(limine_framebuffer fb, const char* first, const char* second){
 }
 
 
+
 void execute_command(limine_framebuffer* fb){
     uint64_t scale = 2;
     if (command_buffer[0] == 'H' && command_buffer[1] == 'E' && command_buffer[2] == 'L' && command_buffer[3] == 'P' && command_buffer[4] == '\0') {
@@ -880,22 +881,68 @@ void execute_command(limine_framebuffer* fb){
     } else if (command_buffer[0] == 'L' && command_buffer[1] == 'I' && command_buffer[2] == 'S' && command_buffer[3] == 'T' && command_buffer[4] == '\0') {
         char buffer[21];
         uint64_t free_space = 255 - saved_text_len;
+        uint64_t free_space_first = 255 - first_text_len;
+        uint64_t free_space_second = 255 - second_text_len;
+        uint64_t free_space_third = 255 - third_text_len;
+        uint64_t free_space_four = 255 - four_text_len;
+        uint64_t free_space_five = 255 - five_text_len;
         
         draw_text(fb, "STORAGE INFORMATION\n", 2);
-        if (saved_text_len > 0) {
+        if (saved_text_len > 0 || first_text_len > 0 || second_text_len > 0 || third_text_len > 0 || four_text_len > 0 || five_text_len > 0)  {
             draw_text(fb, "STATUS: DATA SAVED\n", 2);
         }
         else {
             draw_text(fb, "STATUS: DATA NOT SAVED\n", 2);
         }
         number_to_string(saved_text_len, buffer);
-        draw_text(fb, "TEXT LENGTH: ", 2);
+        draw_text(fb, "TEXT LENGTH ON NULL DISK: ", 2);
+        draw_text(fb, buffer,2);
+        cursor_y += 7 *scale + 1 * scale;
+        cursor_x = 0;
+        for (int i = 0; i < 21; i++) {
+            buffer[i] = '\0';
+        }
+        number_to_string(first_text_len, buffer);
+        draw_text(fb, "TEXT LENGHT ON FIRST DISK ", 2);
         draw_text(fb, buffer,2);
         cursor_y += 7 *scale + 1 * scale;
         cursor_x = 0;
         for (int i = 0; i != 21; i++) {
             buffer[i] = '\0';
         }
+        number_to_string(second_text_len, buffer);
+        draw_text(fb, "TEXT LENGHT ON SECOND DISK ", 2);
+        draw_text(fb, buffer, 2);
+        cursor_y += 7 *scale + 1 * scale;
+        cursor_x = 0;
+        for (int i = 0; i != 21; i++) {
+            buffer[i] = '\0';
+        }
+        number_to_string(third_text_len, buffer);
+        draw_text(fb, "TEXT LENGHT IN THIRD DISK ", 2);
+        draw_text(fb, buffer, 2);
+        cursor_y += 7 *scale + 1 * scale;
+        cursor_x = 0;
+        for (int i = 0; i != 21; i++) {
+            buffer[i] = '\0';
+        }
+        number_to_string(four_text_len, buffer);
+        draw_text(fb, "TEXT LENGHT IN FOUR DISK ", 2);
+        draw_text(fb, buffer, 2);
+        cursor_y += 7 *scale + 1 * scale;
+        cursor_x = 0;
+        for (int i = 0; i != 21; i++) {
+            buffer[i] = '\0';
+        }
+        number_to_string(five_text_len, buffer);
+        draw_text(fb, "TEXT LENGHT IN FIVE DISK ", 2);
+        draw_text(fb, buffer, 2);
+        cursor_y += 7 *scale + 1 * scale;
+        cursor_x = 0;
+        for (int i = 0; i != 21; i++) {
+            buffer[i] = '\0';
+        }
+
         number_to_string(free_space, buffer);
         draw_text(fb, "FREE SPACE ON NULL DISK: ", 2);
         draw_text(fb, buffer,2);
@@ -904,7 +951,47 @@ void execute_command(limine_framebuffer* fb){
         for (int i = 0; i != 21; i++) {
             buffer[i] = '\0';
         }
-        draw_text(fb, "CAPACITY: 255 BYTES\n", 2);
+        number_to_string(free_space_first, buffer);
+        draw_text(fb, "FREE SPACE ON FIRST DISK: ", 2);
+        draw_text(fb, buffer, 2);
+        cursor_y += 7 *scale + 1 * scale;
+        cursor_x = 0;
+        for (int i = 0; i != 21; i++) {
+            buffer[i] = '\0';
+        }
+        number_to_string(free_space_second, buffer);
+        draw_text(fb, "FREE SPACE ON SECOND DISK ", 2);
+        draw_text(fb, buffer, 2);
+        cursor_y += 7 *scale + 1 * scale;
+        cursor_x = 0;
+        for (int i = 0; i != 21; i++) {
+            buffer[i] = '\0';
+        }
+        number_to_string(free_space_third, buffer);
+        draw_text(fb, "FREE SPACE ON THIRD DISK ", 2);
+        draw_text(fb, buffer, 2);
+        cursor_y += 7 *scale + 1 * scale;
+        cursor_x = 0;
+        for (int i = 0; i != 21; i++) {
+            buffer[i] = '\0';
+        }
+        number_to_string(free_space_four, buffer);
+        draw_text(fb, "FREE SPACE ON FOUR DISK ", 2);
+        draw_text(fb, buffer, 2);
+        cursor_y += 7 *scale + 1 * scale;
+        cursor_x = 0;
+        for (int i = 0; i != 21; i++) {
+            buffer[i] = '\0';
+        }
+        number_to_string(free_space_five, buffer);
+        draw_text(fb, "FREE SPACE ON FIVE DISK ", 2);
+        draw_text(fb, buffer, 2);
+        cursor_y += 7 *scale + 1 * scale;
+        cursor_x = 0;
+        for (int i = 0; i != 21; i++) {
+            buffer[i] = '\0';
+        }
+        draw_text(fb, "CAPACITY: 1530 BYTES\n", 2);
         
     } else if (command_buffer[0]== 'Z' && command_buffer[1] == 'I' && command_buffer[2] == 'G') {
         draw_cat(fb, 100, 50, 2, 0, 0, 0);
