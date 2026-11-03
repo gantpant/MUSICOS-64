@@ -202,6 +202,107 @@ void draw_cat(
         }
     }
 }
+const char *get_ukrain(char symbol, int row){
+    switch (symbol) {
+        case ' ': {static const char *g[]={
+            "00000","00000","00000","00000","00000","00000","00000"
+        }; return g[row];}
+        case 'F': {static const char *g[]={
+            "00100","01010","10001","11111","10001","10001","10001"
+        }; return g[row];}
+        case ',': {static const char *g[]={
+            "11111","10000","10000","11110","10001","10001","11110"
+        }; return g[row];}
+        case 'D': {static const char *g[]={
+            "11110","10001","10001","11110","10001","10001","11110"
+        }; return g[row];}
+        case 'U': {static const char *g[]={
+            "11111","10000","10000","10000","10000","10000","10000"
+        }; return g[row];}
+        case 'Q': {static const char *g[]={
+            "10101","11001","10101","10011","10001","10001","10001"
+        }; return g[row];}
+        case 'W': {static const char *g[]={
+            "10010","10010","10010","10010","10010","11111","00011"
+        }; return g[row];}
+        case 'E': {static const char *g[]={
+            "10001", "10001", "01010", "00100","00100", "01000", "10000"
+        }; return g[row];}
+        case 'R': {static const char *g[]={
+            "10001","10010","10100","11000","10100","10010","10001"
+        }; return g[row];}
+        case 'T': {static const char *g[]={
+            "11111", "10000", "10000", "11110","10000", "10000", "11111"
+        }; return g[row];}
+        case 'Y': {static const char *g[]={
+            "10001", "10001", "10001", "11111","10001", "10001", "10001"
+        }; return g[row];}
+        case 'I': {static const char *g[]={
+            "10101","10101","10101","10101","10101","10101","11111"
+        }; return g[row];}
+        case 'O': {static const char *g[]={
+            "10101","10101","10101","10101","10101","11111","00001"
+        }; return g[row];}
+        case 'P': {static const char *g[]={
+            "11110","00001","00001","11110","00001","00001","11111"
+        }; return g[row];}
+        case '[': {static const char *g[]={
+            "10001", "10001", "01010", "00100","01010", "10001", "10001"
+        }; return g[row];}
+        case ']': {static const char *g[]={
+            "10001","00100","00100","00100","00100","00100","00100"
+        }; return g[row];}
+        case 'A': {static const char *g[]={
+            "00100","01110","10001","10001","10001","01110","00100"
+        }; return g[row];}
+        case 'S': {static const char *g[]={
+            "00100","00000","00100","00100","00100","00100","00100"
+        }; return g[row];}
+        case 'G': {static const char *g[]={
+            "11111","10001","10001","10001","10001","10001","10001"
+        }; return g[row];}
+        case 'H': {static const char *g[]={
+            "11110", "10001", "10001", "11110","10000", "10000", "10000"
+        }; return g[row];}
+        case 'J': {static const char *g[]={
+            "01110", "10001", "10001", "10001","10001", "10001", "01110"
+        }; return g[row];}
+        case 'K': {static const char *g[]={
+            "00111","00101","00101","00101","00101","00101","11101"
+        }; return g[row];}
+        case 'L': {static const char *g[]={
+            "10001","11111","01010","01010","01010","01010","01110"
+        }; return g[row];}
+        case '"': {static const char *g[]={
+            "01111","10000","10000","01111","10000","10000","01111"
+        }; return g[row];}
+        case 'Z': {static const char *g[]={
+            "01111","10001","10001","01111","00101","01001","10001"
+        }; return g[row];}
+        case 'X': {static const char *g[]={
+            "10001","10001","10001","01111","00001","00001","00001"
+        }; return g[row];}
+        case 'C': {static const char *g[]={
+            "01111","10000","10000","10000","10000","10000","01111"
+        }; return g[row];}
+        case 'V': {static const char *g[]={
+            "10001","11011","10101","10101","10001","10001","10001"
+        }; return g[row];}
+        case 'B': {static const char *g[]={
+            "10001","10001","10011","10101","11001","10001","10001"
+        }; return g[row];}
+        case 'N': {static const char *g[]={
+            "11111","00100","00100","00100","00100","00100","00100"
+        }; return g[row];}
+        case 'M': {static const char *g[]={
+            "10000","10000","10000","11110","10001","10001","11110"
+        }; return g[row];}
+        case '.': {static const char *g[]={
+            "10010","10101","10101","11101","10101","10101","10010"
+        }; return g[row];}
+        default: return "00000";
+    }
+}
 
 const char *get_char_row(char symbol, int row){
     switch (symbol){
@@ -498,6 +599,20 @@ void draw_char(limine_framebuffer* fb, uint64_t x, uint64_t y, char symbol, uint
         }
     }
 }
+void draw_char_ukr(limine_framebuffer* fb, uint64_t x, uint64_t y, char symbol, uint64_t scale) {
+    for (int row = 0; row <7; row++) {
+        const char* pixels = get_ukrain(symbol, row);
+        for (int col = 0;col <5; col++) {
+            if (pixels[col] == '1') {
+                for (uint64_t sy = 0; sy < scale; sy++) {
+                    for (uint64_t sx =0; sx< scale; sx++) {
+                        draw_pixel(fb,x+col * scale +sx,y+row * scale +sy,text_red,text_green,text_blue);        
+                    }
+                }
+            }
+        }
+    }
+}
 
 void draw_text(limine_framebuffer* fb, const char* text, uint64_t scale) {
     int let = 0;
@@ -520,6 +635,32 @@ void draw_text(limine_framebuffer* fb, const char* text, uint64_t scale) {
         }
         if (text[i] != '\n') {
             draw_char(fb, cursor_x, cursor_y,text[i],scale);
+            cursor_x += 5 * scale + 1 * scale;
+        }
+    }
+    
+}
+void draw_text_ukr(limine_framebuffer* fb, const char* text, uint64_t scale) {
+    int let = 0;
+    uint64_t x_start = cursor_x;
+    for (int i = 0; text[i] !='\0'; i++) {
+        let += 1;
+    }
+    for (int i =0; i < let; i++) {
+        if (text[i] == '\n') {
+            cursor_y += 7 * scale + 1 * scale;
+            cursor_x = x_start;
+        }
+        if (text[i] == '\0') {
+            cursor_y += 7 * scale + 1 * scale;
+            cursor_x = x_start;
+        }
+        if (cursor_x + 5 * scale > fb->width) {
+            cursor_y = cursor_y + 7 * scale + 1 * scale;
+            cursor_x = x_start;
+        }
+        if (text[i] != '\n') {
+            draw_char_ukr(fb, cursor_x, cursor_y,text[i],scale);
             cursor_x += 5 * scale + 1 * scale;
         }
     }
@@ -747,7 +888,6 @@ void execute_command(limine_framebuffer* fb){
         draw_text(fb, "DELETE DELETE TEXT\n", 2);
         draw_text(fb, "APPEND ADD TEXT TO TEXT\n", 2);
         draw_text(fb, "LIST INFORMATION PRO TEXT\n",2);
-        
     } else if (command_buffer[0] == 'A' && command_buffer[1] == 'B' && command_buffer[2] == 'O' && command_buffer[3] == 'U' && command_buffer[4] == 'T' && command_buffer[5] == '\0') {
         draw_text(fb, "MUSICOS64\n", 2);
         draw_text(fb, "A CUSTOM OPERATING SYSTEM\n", 2);
@@ -997,6 +1137,7 @@ void execute_command(limine_framebuffer* fb){
         draw_cat(fb, 100, 50, 2, 0, 0, 0);
         draw_photo(fb,cat_photo,PHOTO_WIDTH,PHOTO_HEIGHT,380,0);
         draw_photo(fb,cat_photo2,PHOTO2_WIDTH,PHOTO2_HEIGHT,760,0);
+        draw_text_ukr(fb, "LF Z WT PHJ,BD", 2);
         
     }else if (command_buffer[0] == 'D' && command_buffer[1]== 'S' && command_buffer[2] == 'A' && command_buffer[3] == 'V' && command_buffer[4]== 'E' && command_buffer[5] == ' ' && command_buffer[7]== ' ') {
         if (command_buffer[6] == '1') {
@@ -1115,6 +1256,8 @@ void execute_command(limine_framebuffer* fb){
         }
         cursor_x = 0;
         cursor_y += 7 *scale + 1 *scale;
+    } else if (command_buffer[0] == 'T' && command_buffer[1] == 'E' && command_buffer[2] == 'S' && command_buffer[3] == 'T' && command_buffer[4] == '\0') {
+        draw_text_ukr(fb, "LF Z WT PHJ,BD\n", 2);
     }
     else if (command_buffer != 0) {
         draw_text(fb, "UNKNOWN COMMAND\n", 2);
