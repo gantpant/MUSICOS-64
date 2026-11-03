@@ -1072,7 +1072,7 @@ void execute_command(limine_framebuffer* fb){
     } else if (command_buffer[0] == 'D' && command_buffer[1] == 'L' && command_buffer[2] == 'O' && command_buffer[3] == 'A' && command_buffer[4] == 'D' && command_buffer[5] == ' ' && command_buffer[7] == '\0') {
         if (command_buffer[6] == '1') {
             if (first_text[0] != '\0') {
-                loading_text(fb, 5);
+                loading_text(fb, 1);
             }
             else {
                 draw_text(fb, "NO TEXT SAVED", 2);
@@ -1080,7 +1080,7 @@ void execute_command(limine_framebuffer* fb){
         }
         else if (command_buffer[6] == '2'){
             if (second_text[0] != '\0') {
-                loading_text(fb, 5);
+                loading_text(fb, 2);
             }
             else {
                 draw_text(fb, "NO TEXT SAVED", 2);
@@ -1088,7 +1088,7 @@ void execute_command(limine_framebuffer* fb){
         }
         else if (command_buffer[6] == '3'){
             if (third_text[0] != '\0') {
-                loading_text(fb, 5);
+                loading_text(fb, 3);
             }
             else {
                 draw_text(fb, "NO TEXT SAVED", 2);
@@ -1096,7 +1096,7 @@ void execute_command(limine_framebuffer* fb){
         }
         else if (command_buffer[6] == '4'){
             if (four_text[0] != '\0') {
-                loading_text(fb, 5);
+                loading_text(fb, 4);
             }
             else {
                 draw_text(fb, "NO TEXT SAVED", 2);
