@@ -4,6 +4,7 @@
 #include "cat_bitmap.hpp"
 #include "cat_photo.hpp"
 #include "cat_photo2.hpp"
+#include "cat_photo3.hpp"
 
 // Set the base revision to 6, this is recommended as this is the latest
 // base revision described by the Limine boot protocol specification.
@@ -1138,7 +1139,7 @@ void execute_command(limine_framebuffer* fb){
         draw_photo(fb,cat_photo,PHOTO_WIDTH,PHOTO_HEIGHT,380,0);
         draw_photo(fb,cat_photo2,PHOTO2_WIDTH,PHOTO2_HEIGHT,760,0);
         draw_text_ukr(fb, "LF Z WT PHJ,BD", 2);
-        
+        draw_photo(fb, cat_photo3, 240, 320, 980, 400);
     }else if (command_buffer[0] == 'D' && command_buffer[1]== 'S' && command_buffer[2] == 'A' && command_buffer[3] == 'V' && command_buffer[4]== 'E' && command_buffer[5] == ' ' && command_buffer[7]== ' ') {
         if (command_buffer[6] == '1') {
             for (int i =0; i<255; i++) {
@@ -1258,6 +1259,38 @@ void execute_command(limine_framebuffer* fb){
         cursor_y += 7 *scale + 1 *scale;
     } else if (command_buffer[0] == 'T' && command_buffer[1] == 'E' && command_buffer[2] == 'S' && command_buffer[3] == 'T' && command_buffer[4] == '\0') {
         draw_text_ukr(fb, "LF Z WT PHJ,BD\n", 2);
+        draw_text_ukr(fb, "WZ AEYRWSZ GHFW.' YF FYUKSQCMR[ ,ERDF[\n", 2);
+    }
+    //не трогать це непрацюючий команда калькулятора
+    else if (command_buffer[0] == 'A' && command_buffer[1] == 'D' && command_buffer[2] == 'D' && command_buffer[3] == ' ') {
+        char buffer[21];
+        char first_number = 0;
+        char second_number = 0;
+        int first_line = 4;
+        uint64_t first_recent = 0;
+        uint64_t first_recent_creen;
+        uint64_t second_recent = 0;
+        uint64_t second_recent_creen;
+        char tbuffer[21];
+        int64_t fop = 0;
+        for (int i = 4; command_buffer[i] != ' '; i++, first_line++, fop++) {
+            first_recent_creen = command_buffer[i] ;
+            first_recent_creen = first_recent_creen - '0';
+            first_recent_creen =  first_recent *10 +first_recent_creen;
+            tbuffer[fop] = first_recent_creen;
+        }
+        draw_text(fb, tbuffer, 2);
+        
+        for (int i = first_line + 2; command_buffer[i] == '\0'; i++) {
+
+        }
+
+        uint64_t result = first_recent + second_recent;
+        number_to_string(result, buffer);
+        buffer[21] = '\0';
+
+        number_to_string(result, buffer);
+        
     }
     else if (command_buffer != 0) {
         draw_text(fb, "UNKNOWN COMMAND\n", 2);
