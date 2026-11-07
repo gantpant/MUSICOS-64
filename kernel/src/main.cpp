@@ -1359,39 +1359,124 @@ void execute_command(limine_framebuffer* fb){
     //не трогать це непрацюючий команда калькулятора
     else if (command_buffer[0] == 'A' && command_buffer[1] == 'D' && command_buffer[2] == 'D' && command_buffer[3] == ' ') {
         char buffer[21];
-        char first_number = 0;
-        char second_number = 0;
-        int first_line = 4;
-        uint64_t first_recent = 0;
-        uint64_t first_recent_creen;
-        uint64_t second_recent = 0;
-        uint64_t second_recent_creen;
-        char tbuffer[21];
-        int64_t fop = 0;
-        for (int i = 4; command_buffer[i] != ' '; i++, first_line++, fop++) {
-            first_recent_creen = command_buffer[i] ;
-            first_recent_creen = first_recent_creen - '0';
-            first_recent_creen =  first_recent *10 +first_recent_creen;
-            tbuffer[fop] = first_recent_creen;
+        uint64_t old_number = 0;
+        uint64_t number = 0;
+        uint64_t rind =0;
+        uint64_t old_number_2 =0;
+        uint64_t number_2 = 0;
+        int aber = 0;
+        for (int i = 4; command_buffer[i] != ' '; i++) {
+            if (command_buffer[i] == '1') {
+                rind =1;
+                old_number = number;
+                number = old_number *10 +rind;
+            }
+            if (command_buffer[i] == '2') {
+                rind =2;
+                old_number = number;
+                number = old_number *10 + rind;
+            }
+            if (command_buffer[i] == '3') {
+                rind =3;
+                old_number = number;
+                number = old_number *10 + rind;
+            }
+            if (command_buffer[i] == '4') {
+                rind =4;
+                old_number = number;
+                number = old_number *10 + rind;
+            }
+            if (command_buffer[i] == '5') {
+                rind =5;
+                old_number = number;
+                number = old_number *10 + rind;
+            }
+            if (command_buffer[i] == '6') {
+                rind =6;
+                old_number = number;
+                number = old_number *10 + rind;
+            }
+            if (command_buffer[i] == '7') {
+                rind =7;
+                old_number = number;
+                number = old_number *10 + rind;
+            }
+            if (command_buffer[i] == '8') {
+                rind =8;
+                old_number = number;
+                number = old_number *10 + rind;
+            }
+            if (command_buffer[i] == '9') {
+                rind =9;
+                old_number = number;
+                number = old_number *10 + rind;
+            }
+            aber = i;
         }
-        draw_text(fb, tbuffer, 2);
-        
-        for (int i = first_line + 2; command_buffer[i] == '\0'; i++) {
-
+        for (int i = aber + 1; command_buffer[i] != '\0'; i++) {
+            if (command_buffer[i] == '1') {
+                rind =1;
+                old_number_2 = number_2;
+                number_2 = old_number_2 *10 +rind;
+            }
+            if (command_buffer[i] == '2') {
+                rind =2;
+                old_number_2 = number_2;
+                number_2 = old_number_2 *10 + rind;
+            }
+            if (command_buffer[i] == '3') {
+                rind =3;
+                old_number_2 = number_2;
+                number_2 = old_number_2 *10 + rind;
+            }
+            if (command_buffer[i] == '4') {
+                rind =4;
+                old_number_2 = number_2;
+                number_2 = old_number_2 *10 + rind;
+            }
+            if (command_buffer[i] == '5') {
+                rind =5;
+                old_number_2 = number_2;
+                number_2 = old_number_2 *10 + rind;
+            }
+            if (command_buffer[i] == '6') {
+                rind =6;
+                old_number_2 = number_2;
+                number_2 = old_number_2 *10 + rind;
+            }
+            if (command_buffer[i] == '7') {
+                rind =7;
+                old_number_2 = number_2;
+                number_2 = old_number_2 *10 + rind;
+            }
+            if (command_buffer[i] == '8') {
+                rind =8;
+                old_number_2 = number_2;
+                number_2 = old_number_2 *10 + rind;
+            }
+            if (command_buffer[i] == '9') {
+                rind =9;
+                old_number_2 = number_2;
+                number_2 = old_number_2 *10 + rind;
+            }
         }
-
-        uint64_t result = first_recent + second_recent;
+        for (int i = 0; i <21; i++) {
+            buffer[i] = '\0';
+        }
+        uint64_t result = number + number_2;
         number_to_string(result, buffer);
-        buffer[21] = '\0';
-
-        number_to_string(result, buffer);
-        
+        draw_text(fb, buffer, 2);
+        cursor_y += 7 * scale + 1 *scale;
+        cursor_x = 0;
     }
     else if (command_buffer[0] == 'G' && command_buffer[1] == 'A' && command_buffer[2] == 'M' && command_buffer[3] == 'E' && command_buffer[4] == ' ' && command_buffer[5] == '1' && command_buffer[6] == '\0'){
 
     }
     else if (command_buffer[0] == 'W' && command_buffer[1] == 'E' && command_buffer[2] == 'B' && command_buffer[3] == ' ' && command_buffer[4] == 'I' && command_buffer[5] == 'N' && command_buffer[6] == 'F' && command_buffer[7] == 'O' && command_buffer[8] == '\0'){
         draw_text(fb, "WEB SITE MINI LETER GANTPANT.GITHUB.IO/MUSICOS-64/", 2);   
+    } 
+    else if (command_buffer[0] == 'C' && command_buffer[1] == 'A' && command_buffer[2] == 'S' && command_buffer[3] == 'I' && command_buffer[4] == 'N' && command_buffer[5] == 'O' && command_buffer[6] == '\0') {
+        
     }
     //зроби казино просто нада
     else if (command_buffer[0] != '\0') {
