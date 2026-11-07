@@ -1478,6 +1478,455 @@ void execute_command(limine_framebuffer* fb){
     else if (command_buffer[0] == 'C' && command_buffer[1] == 'A' && command_buffer[2] == 'S' && command_buffer[3] == 'I' && command_buffer[4] == 'N' && command_buffer[5] == 'O' && command_buffer[6] == '\0') {
         
     }
+    else if (command_buffer[0] == 'S' && command_buffer[1] == 'U' &&command_buffer[2] == 'B' && command_buffer[3] == 'T' && command_buffer[4] == 'R' && command_buffer[5] == 'A' && command_buffer[6] == 'C' &&command_buffer[7] == 'T') {
+        char buffer[21];
+        uint64_t old_number = 0;
+        uint64_t number = 0;
+        uint64_t rind =0;
+        uint64_t old_number_2 =0;
+        uint64_t number_2 = 0;
+        int aber = 0;
+        for (int i = 9; command_buffer[i] != ' '; i++) {
+            if (command_buffer[i] == '1') {
+                rind =1;
+                old_number = number;
+                number = old_number *10 +rind;
+            }
+            if (command_buffer[i] == '2') {
+                rind =2;
+                old_number = number;
+                number = old_number *10 + rind;
+            }
+            if (command_buffer[i] == '3') {
+                rind =3;
+                old_number = number;
+                number = old_number *10 + rind;
+            }
+            if (command_buffer[i] == '4') {
+                rind =4;
+                old_number = number;
+                number = old_number *10 + rind;
+            }
+            if (command_buffer[i] == '5') {
+                rind =5;
+                old_number = number;
+                number = old_number *10 + rind;
+            }
+            if (command_buffer[i] == '6') {
+                rind =6;
+                old_number = number;
+                number = old_number *10 + rind;
+            }
+            if (command_buffer[i] == '7') {
+                rind =7;
+                old_number = number;
+                number = old_number *10 + rind;
+            }
+            if (command_buffer[i] == '8') {
+                rind =8;
+                old_number = number;
+                number = old_number *10 + rind;
+            }
+            if (command_buffer[i] == '9') {
+                rind =9;
+                old_number = number;
+                number = old_number *10 + rind;
+            }
+            aber = i;
+        }
+        for (int i = aber + 1; command_buffer[i] != '\0'; i++) {
+            if (command_buffer[i] == '1') {
+                rind =1;
+                old_number_2 = number_2;
+                number_2 = old_number_2 *10 +rind;
+            }
+            if (command_buffer[i] == '2') {
+                rind =2;
+                old_number_2 = number_2;
+                number_2 = old_number_2 *10 + rind;
+            }
+            if (command_buffer[i] == '3') {
+                rind =3;
+                old_number_2 = number_2;
+                number_2 = old_number_2 *10 + rind;
+            }
+            if (command_buffer[i] == '4') {
+                rind =4;
+                old_number_2 = number_2;
+                number_2 = old_number_2 *10 + rind;
+            }
+            if (command_buffer[i] == '5') {
+                rind =5;
+                old_number_2 = number_2;
+                number_2 = old_number_2 *10 + rind;
+            }
+            if (command_buffer[i] == '6') {
+                rind =6;
+                old_number_2 = number_2;
+                number_2 = old_number_2 *10 + rind;
+            }
+            if (command_buffer[i] == '7') {
+                rind =7;
+                old_number_2 = number_2;
+                number_2 = old_number_2 *10 + rind;
+            }
+            if (command_buffer[i] == '8') {
+                rind =8;
+                old_number_2 = number_2;
+                number_2 = old_number_2 *10 + rind;
+            }
+            if (command_buffer[i] == '9') {
+                rind =9;
+                old_number_2 = number_2;
+                number_2 = old_number_2 *10 + rind;
+            }
+        }
+        for (int i = 0; i <21; i++) {
+            buffer[i] = '\0';
+        }
+        uint64_t result = number - number_2;
+        number_to_string(result, buffer);
+        draw_text(fb, buffer, 2);
+        cursor_y += 7 * scale + 1 *scale;
+        cursor_x = 0;
+    }
+    // multiplication
+    else if (command_buffer[0] == 'M' && command_buffer[1] == 'U' && command_buffer[2] == 'L' && command_buffer[3] == 'T' && command_buffer[4] == 'I' && command_buffer[5] == 'P' && command_buffer[6] == 'L' && command_buffer[7] == 'I' && command_buffer[8] == 'C' && command_buffer[9] == 'A' && command_buffer[10] == 'T' && command_buffer[11] == 'I' &&command_buffer[12] == 'O' && command_buffer[13] == 'N') {
+        char buffer[21];
+        uint64_t old_number = 0;
+        uint64_t number = 0;
+        uint64_t rind =0;
+        uint64_t old_number_2 =0;
+        uint64_t number_2 = 0;
+        int aber = 0;
+        for (int i = 15; command_buffer[i] != ' '; i++) {
+            if (command_buffer[i] == '1') {
+                rind =1;
+                old_number = number;
+                number = old_number *10 +rind;
+            }
+            if (command_buffer[i] == '2') {
+                rind =2;
+                old_number = number;
+                number = old_number *10 + rind;
+            }
+            if (command_buffer[i] == '3') {
+                rind =3;
+                old_number = number;
+                number = old_number *10 + rind;
+            }
+            if (command_buffer[i] == '4') {
+                rind =4;
+                old_number = number;
+                number = old_number *10 + rind;
+            }
+            if (command_buffer[i] == '5') {
+                rind =5;
+                old_number = number;
+                number = old_number *10 + rind;
+            }
+            if (command_buffer[i] == '6') {
+                rind =6;
+                old_number = number;
+                number = old_number *10 + rind;
+            }
+            if (command_buffer[i] == '7') {
+                rind =7;
+                old_number = number;
+                number = old_number *10 + rind;
+            }
+            if (command_buffer[i] == '8') {
+                rind =8;
+                old_number = number;
+                number = old_number *10 + rind;
+            }
+            if (command_buffer[i] == '9') {
+                rind =9;
+                old_number = number;
+                number = old_number *10 + rind;
+            }
+            aber = i;
+        }
+        for (int i = aber + 1; command_buffer[i] != '\0'; i++) {
+            if (command_buffer[i] == '1') {
+                rind =1;
+                old_number_2 = number_2;
+                number_2 = old_number_2 *10 +rind;
+            }
+            if (command_buffer[i] == '2') {
+                rind =2;
+                old_number_2 = number_2;
+                number_2 = old_number_2 *10 + rind;
+            }
+            if (command_buffer[i] == '3') {
+                rind =3;
+                old_number_2 = number_2;
+                number_2 = old_number_2 *10 + rind;
+            }
+            if (command_buffer[i] == '4') {
+                rind =4;
+                old_number_2 = number_2;
+                number_2 = old_number_2 *10 + rind;
+            }
+            if (command_buffer[i] == '5') {
+                rind =5;
+                old_number_2 = number_2;
+                number_2 = old_number_2 *10 + rind;
+            }
+            if (command_buffer[i] == '6') {
+                rind =6;
+                old_number_2 = number_2;
+                number_2 = old_number_2 *10 + rind;
+            }
+            if (command_buffer[i] == '7') {
+                rind =7;
+                old_number_2 = number_2;
+                number_2 = old_number_2 *10 + rind;
+            }
+            if (command_buffer[i] == '8') {
+                rind =8;
+                old_number_2 = number_2;
+                number_2 = old_number_2 *10 + rind;
+            }
+            if (command_buffer[i] == '9') {
+                rind =9;
+                old_number_2 = number_2;
+                number_2 = old_number_2 *10 + rind;
+            }
+        }
+        for (int i = 0; i <21; i++) {
+            buffer[i] = '\0';
+        }
+        uint64_t result = number * number_2;
+        number_to_string(result, buffer);
+        draw_text(fb, buffer, 2);
+        cursor_y += 7 * scale + 1 *scale;
+        cursor_x = 0;
+    }
+    else if (command_buffer[0] == 'D' && command_buffer[1] == 'I' && command_buffer[2] == 'V' && command_buffer[3] == 'I' && command_buffer[4] == 'S' && command_buffer[5] == 'I' && command_buffer[6] == 'O' && command_buffer[7] == 'N') {
+        char buffer[21];
+        uint64_t old_number = 0;
+        uint64_t number = 0;
+        uint64_t rind =0;
+        uint64_t old_number_2 =0;
+        uint64_t number_2 = 0;
+        int aber = 0;
+        for (int i = 9; command_buffer[i] != ' '; i++) {
+            if (command_buffer[i] == '1') {
+                rind =1;
+                old_number = number;
+                number = old_number *10 +rind;
+            }
+            if (command_buffer[i] == '2') {
+                rind =2;
+                old_number = number;
+                number = old_number *10 + rind;
+            }
+            if (command_buffer[i] == '3') {
+                rind =3;
+                old_number = number;
+                number = old_number *10 + rind;
+            }
+            if (command_buffer[i] == '4') {
+                rind =4;
+                old_number = number;
+                number = old_number *10 + rind;
+            }
+            if (command_buffer[i] == '5') {
+                rind =5;
+                old_number = number;
+                number = old_number *10 + rind;
+            }
+            if (command_buffer[i] == '6') {
+                rind =6;
+                old_number = number;
+                number = old_number *10 + rind;
+            }
+            if (command_buffer[i] == '7') {
+                rind =7;
+                old_number = number;
+                number = old_number *10 + rind;
+            }
+            if (command_buffer[i] == '8') {
+                rind =8;
+                old_number = number;
+                number = old_number *10 + rind;
+            }
+            if (command_buffer[i] == '9') {
+                rind =9;
+                old_number = number;
+                number = old_number *10 + rind;
+            }
+            aber = i;
+        }
+        for (int i = aber + 1; command_buffer[i] != '\0'; i++) {
+            if (command_buffer[i] == '1') {
+                rind =1;
+                old_number_2 = number_2;
+                number_2 = old_number_2 *10 +rind;
+            }
+            if (command_buffer[i] == '2') {
+                rind =2;
+                old_number_2 = number_2;
+                number_2 = old_number_2 *10 + rind;
+            }
+            if (command_buffer[i] == '3') {
+                rind =3;
+                old_number_2 = number_2;
+                number_2 = old_number_2 *10 + rind;
+            }
+            if (command_buffer[i] == '4') {
+                rind =4;
+                old_number_2 = number_2;
+                number_2 = old_number_2 *10 + rind;
+            }
+            if (command_buffer[i] == '5') {
+                rind =5;
+                old_number_2 = number_2;
+                number_2 = old_number_2 *10 + rind;
+            }
+            if (command_buffer[i] == '6') {
+                rind =6;
+                old_number_2 = number_2;
+                number_2 = old_number_2 *10 + rind;
+            }
+            if (command_buffer[i] == '7') {
+                rind =7;
+                old_number_2 = number_2;
+                number_2 = old_number_2 *10 + rind;
+            }
+            if (command_buffer[i] == '8') {
+                rind =8;
+                old_number_2 = number_2;
+                number_2 = old_number_2 *10 + rind;
+            }
+            if (command_buffer[i] == '9') {
+                rind =9;
+                old_number_2 = number_2;
+                number_2 = old_number_2 *10 + rind;
+            }
+        }
+        for (int i = 0; i <21; i++) {
+            buffer[i] = '\0';
+        }
+        uint64_t result = number / number_2;
+        number_to_string(result, buffer);
+        draw_text(fb, buffer, 2);
+        cursor_y += 7 * scale + 1 *scale;
+        cursor_x = 0;
+    }
+    else if (command_buffer[0] == 'S' && command_buffer[1] == 'T' && command_buffer[2] == 'E' && command_buffer[3] == 'P') {
+        char buffer[21];
+        uint64_t old_number = 0;
+        uint64_t number = 0;
+        uint64_t rind =0;
+        uint64_t old_number_2 =0;
+        uint64_t number_2 = 0;
+        int aber = 0;
+        for (int i = 5; command_buffer[i] != ' '; i++) {
+            if (command_buffer[i] == '1') {
+                rind =1;
+                old_number = number;
+                number = old_number *10 +rind;
+            }
+            if (command_buffer[i] == '2') {
+                rind =2;
+                old_number = number;
+                number = old_number *10 + rind;
+            }
+            if (command_buffer[i] == '3') {
+                rind =3;
+                old_number = number;
+                number = old_number *10 + rind;
+            }
+            if (command_buffer[i] == '4') {
+                rind =4;
+                old_number = number;
+                number = old_number *10 + rind;
+            }
+            if (command_buffer[i] == '5') {
+                rind =5;
+                old_number = number;
+                number = old_number *10 + rind;
+            }
+            if (command_buffer[i] == '6') {
+                rind =6;
+                old_number = number;
+                number = old_number *10 + rind;
+            }
+            if (command_buffer[i] == '7') {
+                rind =7;
+                old_number = number;
+                number = old_number *10 + rind;
+            }
+            if (command_buffer[i] == '8') {
+                rind =8;
+                old_number = number;
+                number = old_number *10 + rind;
+            }
+            if (command_buffer[i] == '9') {
+                rind =9;
+                old_number = number;
+                number = old_number *10 + rind;
+            }
+            aber = i;
+        }
+        for (int i = aber + 1; command_buffer[i] != '\0'; i++) {
+            if (command_buffer[i] == '1') {
+                rind =1;
+                old_number_2 = number_2;
+                number_2 = old_number_2 *10 +rind;
+            }
+            if (command_buffer[i] == '2') {
+                rind =2;
+                old_number_2 = number_2;
+                number_2 = old_number_2 *10 + rind;
+            }
+            if (command_buffer[i] == '3') {
+                rind =3;
+                old_number_2 = number_2;
+                number_2 = old_number_2 *10 + rind;
+            }
+            if (command_buffer[i] == '4') {
+                rind =4;
+                old_number_2 = number_2;
+                number_2 = old_number_2 *10 + rind;
+            }
+            if (command_buffer[i] == '5') {
+                rind =5;
+                old_number_2 = number_2;
+                number_2 = old_number_2 *10 + rind;
+            }
+            if (command_buffer[i] == '6') {
+                rind =6;
+                old_number_2 = number_2;
+                number_2 = old_number_2 *10 + rind;
+            }
+            if (command_buffer[i] == '7') {
+                rind =7;
+                old_number_2 = number_2;
+                number_2 = old_number_2 *10 + rind;
+            }
+            if (command_buffer[i] == '8') {
+                rind =8;
+                old_number_2 = number_2;
+                number_2 = old_number_2 *10 + rind;
+            }
+            if (command_buffer[i] == '9') {
+                rind =9;
+                old_number_2 = number_2;
+                number_2 = old_number_2 *10 + rind;
+            }
+        }
+        for (int i = 0; i <21; i++) {
+            buffer[i] = '\0';
+        }
+        uint64_t result = step(number, number_2);
+        number_to_string(result, buffer);
+        draw_text(fb, buffer, 2);
+        cursor_y += 7 * scale + 1 *scale;
+        cursor_x = 0;
+    }
     //зроби казино просто нада
     else if (command_buffer[0] != '\0') {
         draw_text(fb, "UNKNOWN COMMAND\n", 2);
