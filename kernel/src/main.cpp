@@ -559,7 +559,7 @@ uint8_t background_green = 48;
 uint8_t background_blue = 48;
 char command_buffer[128];
 uint64_t input_len = 0;
-const char* os_version = "0.2.3.2\n";
+const char* os_version = "0.2.4\n";
 char saved_text[256];
 uint64_t saved_text_len = 0;
 char name_per[16][33];
