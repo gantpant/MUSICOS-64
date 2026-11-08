@@ -97,6 +97,9 @@ std::uint32_t fb_channel(std::uint8_t value, std::uint8_t mask_size, std::uint8_
     std::uint64_t max = (std::uint64_t{1} << mask_size) - 1;
     return static_cast<std::uint32_t>((value * max / 255) << mask_shift);
 }
+void outb(uint16_t port, uint8_t value) {
+    asm volatile("outb %0, %1" : : "a"(value), "Nd"(port));
+}
 uint8_t text_red = 255;
 uint8_t text_green = 255;
 uint8_t text_blue = 255;
@@ -589,7 +592,6 @@ uint64_t r_9 = 2;
 uint64_t r_10 = 2;
 
 
-
 void draw_rect(limine_framebuffer* fb,
                uint64_t x, uint64_t y,
                uint64_t width, uint64_t height,
@@ -656,6 +658,29 @@ void draw_text(limine_framebuffer* fb, const char* text, uint64_t scale) {
     }
     
 }
+void draw_text_location(limine_framebuffer* fb, const char* text, uint64_t scale, uint64_t cursor_x, uint64_t cursor_y) {
+    int let = 0;
+    uint64_t x_start = cursor_x;
+    for (int i = 0; text[i] !='\0'; i++) {
+        let += 1;
+    }
+    for (int i =0; i < let; i++) {
+        if (text[i] == '\n') {
+            cursor_x = x_start;
+        }
+        if (text[i] == '\0') {
+            cursor_x = x_start;
+        }
+        if (cursor_x + 5 * scale > fb->width) {
+            cursor_x = x_start;
+        }
+        if (text[i] != '\n') {
+            draw_char(fb, cursor_x, cursor_y,text[i],scale);
+            cursor_x += 5 * scale + 1 * scale;
+        }
+    }
+    
+}
 void draw_text_ukr(limine_framebuffer* fb, const char* text, uint64_t scale) {
     int let = 0;
     uint64_t x_start = cursor_x;
@@ -696,9 +721,50 @@ uint8_t inb(uint16_t port) {
     asm volatile("inb %1, %0" : "=a"(result) : "Nd"(port));
     return result;
 }
-void outb(uint16_t port, uint8_t value) {
-    asm volatile("outb %0, %1" : : "a"(value), "Nd"(port));
+uint8_t get_second() {
+    outb(0x70, 0x00);
+    uint8_t time = inb(0x71);
+    return time;
 }
+uint8_t get_minute() {
+    outb(0x70, 0x02);
+    uint8_t time = inb(0x71);
+    return time;
+}
+uint8_t get_hour() {
+    outb(0x70, 0x04);
+    uint8_t time = inb(0x71);
+    return time;
+}
+uint8_t get_day() {
+    outb(0x70, 0x07);
+    uint8_t time = inb(0x71);
+    return time;
+}
+uint8_t get_month() {
+    outb(0x70, 0x08);
+    uint8_t time = inb(0x71);
+    return time;
+}
+uint8_t get_year() {
+    outb(0x70, 0x09);
+    uint8_t time = inb(0x71);
+    return time;
+}
+uint8_t bcd_to_decimal(uint8_t value) {
+    uint8_t hight = value >> 4;
+    uint8_t low = value & 0x0F;
+    uint8_t result = hight * 10 + low;
+    return result;
+}
+// час торби
+uint8_t second = bcd_to_decimal(get_second());
+uint8_t minute = bcd_to_decimal(get_minute());
+uint8_t hour = bcd_to_decimal(get_hour());
+uint8_t day = bcd_to_decimal(get_day());
+uint8_t month = bcd_to_decimal(get_month());
+uint8_t year = bcd_to_decimal(get_year());
+
 bool keyboard_ready() {
     return (inb(0x64) & 1) != 0;
 }
@@ -2103,6 +2169,26 @@ extern "C" void kmain() {
         framebuffer_request.response->framebuffers[0];
 
     while (true) {
+        char buffer[12];
+        second = bcd_to_decimal(get_second());
+        minute = bcd_to_decimal(get_minute());
+        hour = bcd_to_decimal(get_hour());
+        day = bcd_to_decimal(get_day());
+        month = bcd_to_decimal(get_month());
+        year = bcd_to_decimal(get_year());
+        draw_rect(fb, 500, 0, 800, 28, background_red,background_green,background_blue);
+        number_to_string(second, buffer);
+        draw_text_location(fb, buffer, 4, 500, 0);
+        number_to_string(minute, buffer);
+        draw_text_location(fb, buffer, 4, 644,0);
+        number_to_string(hour, buffer);
+        draw_text_location(fb, buffer, 4, 788, 0);
+        number_to_string(day, buffer);
+        draw_text_location(fb, buffer, 4,932, 0);
+        number_to_string(month, buffer);
+        draw_text_location(fb, buffer, 4, 1076,0);
+        number_to_string(year, buffer);
+        draw_text_location(fb, buffer, 4, 1220,0);
         keyboard_poll(fb);
     }
 }
