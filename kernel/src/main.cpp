@@ -765,6 +765,19 @@ uint8_t day = bcd_to_decimal(get_day());
 uint8_t month = bcd_to_decimal(get_month());
 uint8_t year = bcd_to_decimal(get_year());
 
+uint8_t start_second = second;
+uint8_t start_minute = minute;
+uint8_t start_hour = hour;
+uint8_t start_day =day;
+uint8_t start_month = month;
+uint8_t start_year = year;
+
+uint8_t old_second = second;
+
+uint64_t time_work = 0;
+
+uint8_t time_work_kostul = second;
+
 bool keyboard_ready() {
     return (inb(0x64) & 1) != 0;
 }
@@ -1993,6 +2006,13 @@ void execute_command(limine_framebuffer* fb){
         cursor_y += 7 * scale + 1 *scale;
         cursor_x = 0;
     }
+    else if (command_buffer[0] == 'U' && command_buffer[1] == 'P' && command_buffer[2] == 'T' && command_buffer[3] == 'I' && command_buffer[4] == 'M' &&command_buffer[5] == 'E' && command_buffer[6] == '\0') {
+        char buffer[21];
+        number_to_string(time_work, buffer);
+        draw_text(fb, buffer, 2);
+        cursor_x = 0;
+        cursor_y += 7 * scale + 1 * scale;
+    }
     //зроби казино просто нада
     else if (command_buffer[0] != '\0') {
         draw_text(fb, "UNKNOWN COMMAND\n", 2);
@@ -2190,6 +2210,13 @@ extern "C" void kmain() {
         number_to_string(year, buffer);
         draw_text_location(fb, buffer, 4, 1220,0);
         keyboard_poll(fb);
+        if (second == 0) {
+            time_work_kostul = 0;
+        }
+        if (time_work_kostul != second) {
+            time_work_kostul += 1;
+            time_work += 1;
+        }
     }
 }
 
